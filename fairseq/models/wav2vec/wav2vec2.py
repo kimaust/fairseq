@@ -1121,7 +1121,9 @@ class TransformerEncoder(nn.Module):
         r = None
 
         for i, layer in enumerate(self.layers):
-            dropout_probability = np.random.random() if self.layerdrop > 0 else 1
+            dropout_probability = 1
+            if self.training:
+                dropout_probability = np.random.random() if self.layerdrop > 0 else 1
             if not self.training or (dropout_probability > self.layerdrop):
                 layer_check = layer
                 if isinstance(layer, FullyShardedDataParallel):
